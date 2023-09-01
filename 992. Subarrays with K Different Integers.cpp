@@ -30,8 +30,31 @@ Constraints:
 using namespace std;
 class Solution{
     public:
-    int subarraysWithKDistinct(vector<int>& A, int k) {
+    int count_subarrays_having_atmost_k_distinct_elements(vector<int> &nums,int k){
+        unordered_map<int,int> m;
+        int count=0;
+        int i=0,j=0;
+        int n=nums.size();
+        for(i=0;i<n;i++){
+            m[nums[i]]++;
+            if(m.size()>k){
+                while(m.size()>k){
+                    if(m[nums[j]]<=1){
+                        m.erase(nums[j++]);
+                    }
+                    else{
+                        m[nums[j++]]--;
+                    }
+                }
+            }
+            count+=(i-j+1);
+        }
+        return count;
+    }
 
+
+    int subarraysWithKDistinct(vector<int>& nums, int k) {
+         return count_subarrays_having_atmost_k_distinct_elements(nums,k)-count_subarrays_having_atmost_k_distinct_elements(nums,k-1);
     }
 };
  
@@ -39,7 +62,14 @@ int main(){
     int t;
     cin>>t;
     while(t--){
-        
+        int n,k;
+        cin>>n>>k;
+        vector<int> nums(n);
+        for(int i=0;i<n;i++){
+            cin>>nums[i];
+        }
+        Solution obj;
+        cout<<obj.subarraysWithKDistinct(nums,k)<<endl;
     }
     return 0;
 }
